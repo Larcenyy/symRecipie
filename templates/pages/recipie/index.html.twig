@@ -1,0 +1,49 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} sym | Mes recettes{% endblock %}
+
+{% block body %}
+    <div class="container mt-4">
+        {% for message in app.flashes('success') %}
+            <div class="alert mt-4 alert-dismissible alert-success">
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                {{ message }}
+            </div>
+        {% endfor %}
+
+        <h1>Mes recettes</h1>
+        <div class="count">
+            <span class="badge bg-dark"> Il y a {{ recipe.getTotalItemCount }} ingrédients au total</span>
+        </div>
+        <a class="btn btn-dark mt-3" href="{{ path('recipe.new') }}">Créer une recette</a>
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Nom</th>
+                <th scope="col">Prix</th>
+                <th scope="col">Difficulté</th>
+                <th scope="col">Date de création</th>
+                <th scope="col">Edition</th>
+                <th scope="col">Suppression</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for recipes in recipe %}
+                <tr class="table-danger">
+                    <th scope="row">{{ recipes.id }}</th>
+                    <td>{{ recipes.name }}</td>
+                    <td>{{ (recipes.price is null) ? 'Aucun prix renseigné' : recipes.price }}</td>
+                    <td>{{ (recipes.difficulty is null) ? 'Aucune difficulté renseigné' : recipes.difficulty }}</td>
+                    <td>{{ recipes.createdAt|date('d/m/Y') }}</td>
+                    <td><a href="{{ path('recipe.edit', { id: recipes.id}) }}" class="btn btn-info">Modifier</a></td>
+                    <td><a href="{{ path('recipe.delete', { id: recipes.id}) }}" class="btn btn-info">Supprimer</a></td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <div class="navigation d-flex justify-content-center">
+            {{ knp_pagination_render(recipe) }}
+        </div>
+    </div>
+{% endblock %}

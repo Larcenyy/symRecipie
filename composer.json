@@ -84,7 +84,7 @@
         ]
     },
     "conflict": {
-        "symfony/symfony": "*"
+        "symfony/symfony": "6.2.*"
     },
     "extra": {
         "symfony": {
