@@ -13,6 +13,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[UniqueEntity('email')]
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\EntityListeners(['App\EntityListener\UserListener'])]
+
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -30,12 +31,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Assert\NotNull]
     private array $roles = [];
 
-    /**
-     * @var string The hashed password
-     */
+
     #[ORM\Column(type: "string")]
-    #[Assert\NotBlank]
-    private ?string $password = null;
+    #[Assert\NotBlank()]
+    private ?string $password = "password";
 
     #[ORM\Column(length: 50)]
     #[Assert\Length(min: 2, max: 50)]
@@ -43,8 +42,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $fullName = null;
 
     #[ORM\Column(type: "string", length: 50, nullable: true)]
-    #[Assert\Length(min: 2, max: 50)]
-    #[Assert\NotBlank()]
+    #[Assert\Length(min: 2, max: 50, maxMessage: "Le nombre de caractère ne peux pas dépaser 50")]
     private ?string $pseudo = null;
 
 

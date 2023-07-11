@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edition du profil{% endblock %}
+
+{% block body %}
+    <div class="container">
+        {% for message in app.flashes('warning') %}
+            <div class="alert mt-4 alert-dismissible alert-warning">
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                {{ message }}
+            </div>
+        {% endfor %}
+        <h1 class="mt-4">Edition du profil user</h1>
+        {{ form(form) }}
+    </div>
+{% endblock %}

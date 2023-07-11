@@ -13,6 +13,12 @@
         </div>
     {% endif %}
 
+    {% for message in app.flashes('success') %}
+        <div class="alert mt-4 alert-dismissible alert-success">
+            {{ message }}
+        </div>
+    {% endfor %}
+
     <form action="{{ path('security.login') }}" method="post">
         <div class="form-group">
             <label for="username" class="form-label mt-4">Addresse Email</label>

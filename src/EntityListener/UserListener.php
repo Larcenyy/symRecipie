@@ -15,24 +15,25 @@ class UserListener{
         $this->encodePassword($user);
     }
 
-    public function preUpdate(User $user){
-        $this->encodePassword($user);
-    }
 
     /** Encore password based on plain password
      * @param User $user
      * @return void
      */
+
     public function encodePassword(User $user){
-        if ($user->getPlainPassword() === null){
+
+        $plainPassword = $user->getPlainPassword();
+
+        if ($plainPassword === null) {
             return;
         }
 
-        $user->setPassword(
-            $this->hasher->hashPassword(
-                $user,
-                $user->getPlainPassword()
-            )
+        $hashed = $this->hasher->hashPassword(
+            $user,
+            $plainPassword
         );
+
+        $user->setPassword($hashed);
     }
 }
