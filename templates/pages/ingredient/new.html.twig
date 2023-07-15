@@ -5,21 +5,6 @@
 {% block body %}
     <div class="container">
         <h1 class="mt-4">Création d'un ingrédient</h1>
-
-        {% for message in app.flashes('success') %}
-            <div class="alert mt-4 alert-dismissible alert-success">
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                {{ message }}
-            </div>
-        {% endfor %}
-
-        {% for message in app.flashes('warning') %}
-            <div class="alert mt-4 alert-dismissible alert-danger">
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                {{ message }}
-            </div>
-        {% endfor %}
-
     </div>
     {{ form_start(form) }}
     <div class="form-group">

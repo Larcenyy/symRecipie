@@ -16,6 +16,7 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class RecipeRepository extends ServiceEntityRepository
 {
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Recipe::class);
@@ -37,6 +38,23 @@ class RecipeRepository extends ServiceEntityRepository
         if ($flush) {
             $this->getEntityManager()->flush();
         }
+    }
+
+    /**
+     * @param int $nbRecipes
+     * @return array
+     */
+    public function findPublicRecipe(?int $nbRecipes): array
+    {
+        $queryBuilder = $this->createQueryBuilder('r')
+            ->where('r.isPublic = 1')
+            ->orderBy('r.createdAt', "DESC");
+
+        if ($nbRecipes !== 0 || $nbRecipes !== null) {
+            $queryBuilder->setMaxResults($nbRecipes);
+        }
+
+        return $queryBuilder->getQuery()->getResult();
     }
 
 //    /**
@@ -63,4 +81,5 @@ class RecipeRepository extends ServiceEntityRepository
 //            ->getOneOrNullResult()
 //        ;
 //    }
+
 }

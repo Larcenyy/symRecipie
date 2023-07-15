@@ -31,6 +31,9 @@ class Ingredient
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt;
 
+    #[ORM\ManyToOne(inversedBy: 'ingredients')]
+    private ?User $ingredient = null;
+
     /**
      * Constructor
      */
@@ -83,5 +86,17 @@ class Ingredient
     {
         // TODO: Implement __toString() method.
         return $this->name;
+    }
+
+    public function getIngredient(): ?User
+    {
+        return $this->ingredient;
+    }
+
+    public function setIngredient(?User $ingredient): static
+    {
+        $this->ingredient = $ingredient;
+
+        return $this;
     }
 }

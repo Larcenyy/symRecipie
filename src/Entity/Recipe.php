@@ -62,11 +62,55 @@ class Recipe
     #[ORM\ManyToMany(targetEntity: Ingredient::class)]
     private Collection $ingredients;
 
+    #[ORM\ManyToOne(inversedBy: 'recipes')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $user = null;
+
+    #[ORM\Column]
+    #[Assert\NotBlank]
+    private ?bool $isPublic = null;
+
+    #[ORM\OneToMany(mappedBy: 'recipe', targetEntity: Mark::class, orphanRemoval: true)]
+    private Collection $marks;
+
+    private ?float $average = null;
+
+    /**
+     * @return float|null
+     */
+    public function getAverage(): ?float
+    {
+        $marks = $this->marks;
+
+        if ($marks->toArray() === []){
+            $this->average = null;
+            return $this->average;
+        }
+
+        $total = 0;
+        foreach ($marks as $mark){
+            $total += $mark->getMark();
+        }
+
+        $this->average = $total / count($marks);
+
+        return  $this->average;
+    }
+
+//    /**
+//     * @param float|null $average
+//     */
+//    public function setAverage(?float $average): void
+//    {
+//        $this->average = $average;
+//    }
+
     public function __construct()
     {
         $this->ingredients = new ArrayCollection();
         $this->createdAt = new \DateTimeImmutable();
         $this->updatedAt = new \DateTimeImmutable();
+        $this->marks = new ArrayCollection();
     }
 
 
@@ -209,6 +253,60 @@ class Recipe
     public function removeIngredient(Ingredient $ingredient): self
     {
         $this->ingredients->removeElement($ingredient);
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): static
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    public function getIsPublic(): ?bool
+    {
+        return $this->isPublic;
+    }
+
+    public function setIsPublic(bool $isPublic): static
+    {
+        $this->isPublic = $isPublic;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Mark>
+     */
+    public function getMarks(): Collection
+    {
+        return $this->marks;
+    }
+
+    public function addMark(Mark $mark): static
+    {
+        if (!$this->marks->contains($mark)) {
+            $this->marks->add($mark);
+            $mark->setRecipe($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMark(Mark $mark): static
+    {
+        if ($this->marks->removeElement($mark)) {
+            // set the owning side to null (unless already changed)
+            if ($mark->getRecipe() === $this) {
+                $mark->setRecipe(null);
+            }
+        }
 
         return $this;
     }

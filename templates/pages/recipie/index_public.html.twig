@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} sym | Mes recettes{% endblock %}
+
+{% block body %}
+    <div class="container mt-4">
+        {% for message in app.flashes('success') %}
+            <div class="alert mt-4 alert-dismissible alert-success">
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                {{ message }}
+            </div>
+        {% endfor %}
+
+        {% if not recipe.items is same as([]) %}
+            <h1>Recette de la communautés</h1>
+            <div class="count">
+                <span class="badge bg-dark"> Il y a {{ recipe.getTotalItemCount }} recette communautaire au total</span>
+            </div>
+            <div class="d-flex w-100 flex-row gap-2 flex-wrap  justify-content-center mt-4">
+                {% for recipe in recipe %}
+                    <div class="card border-success mb-3" style="max-width: 20rem;">
+                        <div class="card-header d-flex flex-column align-items-center py-4 gap-1">
+                            <p>Recette n°{{ recipe.id }}</p>
+                            {% if recipe.average %}
+                                <span class="badge bg-danger">La moyenne de note est de : {{ recipe.average }} / 5</span>
+                            {% else %}
+                                <span class="badge bg-danger">Avis insuffisant pour donner une note</span>
+                            {% endif %}</div>
+                        <div class="card-body flex-column d-flex justify-content-between">
+                            <h4 class="card-title"><strong>{{ recipe.name }}</strong></h4>
+                            <small class="card-text">{{ recipe.description }}</small>
+                            <a class="btn btn-dark mt-4 w-100" href="{{ path('recipe.show', {id: recipe.id}) }}">Voir la recette</a>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            <ul class="pagination pagination-sm">
+                {{ knp_pagination_render(recipe) }}
+            </ul>
+
+            {% else %}
+            <h4>Il n'y pas de recette communautaire</h4>
+        {% endif %}
+
+    </div>
+{% endblock %}

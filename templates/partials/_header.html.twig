@@ -1,29 +1,47 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
     <div class="container-fluid">
-        <a class="navbar-brand" href="#">symForum</a>
+        <a class="navbar-brand" href="{{ path('home.index') }}">symForum</a>
         <button class="navbar-toggler collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="navbar-collapse collapse" id="navbarColor01" style="">
+        <div class="collapse navbar-collapse" id="navbarColor01">
             <ul class="navbar-nav me-auto">
                 <li class="nav-item">
-                    <a class="nav-link active" href="#">Accueil
-                        <span class="visually-hidden">(current)</span>
-                    </a>
+                    <a class="nav-link active" href="{{ path('home.index') }}">Accueil</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="{{ path('recipe.public') }}">Communautés</a>
+                </li>
+                {% if app.user %}
                 <li class="nav-item">
                     <a class="nav-link active" href="{{ path('ingredient.index') }}">Mes ingrédients</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link active" href="{{ path('recipe.index') }}">Mes recettes</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link active" href="{{ path('security.login') }}">Connexion</a>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">{{ app.user.FullName }}</a>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" href="{{ path('user.edit.password', {id: app.user.id}) }}">Modifié mon mot de passe</a>
+                        <a class="dropdown-item" href="{{ path('user.edit', {id: app.user.id}) }}">Modifié mes informations</a>
+                        <a class="dropdown-item" href="{{ path('security.logout') }}">Déconnexion</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="{{ path('ingredient.index') }}">Mes ingrédients</a>
+                        <a class="dropdown-item" href="{{ path('recipe.index') }}">Mes recettes</a>
+                    </div>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link active" href="{{ path('security.register') }}">Inscription</a>
-                </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{{ path('security.login') }}">Connexion</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{{ path('security.register') }}">Inscription</a>
+                    </li>
+                {% endif %}
             </ul>
         </div>
     </div>
 </nav>
+
+
+

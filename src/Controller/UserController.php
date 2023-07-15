@@ -11,6 +11,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class UserController extends AbstractController
 {
@@ -22,6 +24,7 @@ class UserController extends AbstractController
      * @return Response
      */
     #[Route('/user/edit/{id}', name: 'user.edit', methods: ["GET", "POST"])]
+    #[IsGranted('ROLE_USER')]
     public function edit(User $user, Request $request, EntityManagerInterface $manager
     , UserPasswordHasherInterface $hasher): Response
 
@@ -59,9 +62,14 @@ class UserController extends AbstractController
     }
 
     #[Route('/user/editpassword/{id}', name: 'user.edit.password', methods: ["GET", "POST"])]
+    #[IsGranted('ROLE_USER')]
     public function editPassword(User $user, Request $request,
     UserPasswordHasherInterface $hasher, EntityManagerInterface $manager
     ) : Response{
+
+        if ($this->getUser() !== $user) {
+            throw new AccessDeniedException("Vous n'avez pas la permission d'éditer ce profil.");
+        }
 
         $form = $this->createForm(UserPasswordType::class);
 

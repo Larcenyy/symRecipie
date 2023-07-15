@@ -18,10 +18,17 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class RecipeType extends AbstractType
 {
+    private $token;
+    public function __construct(TokenStorageInterface $token){
+        $this->token = $token;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
@@ -131,7 +138,9 @@ class RecipeType extends AbstractType
                 'class' => Ingredient::class,
                 'query_builder' => function (IngredientRepository $r){
                     return $r->createQueryBuilder('i')
-                        ->orderBy('i.name', 'ASC');
+                        ->where('i.ingredient = :ingredient')
+                        ->orderBy('i.name', 'ASC')
+                        ->setParameter('ingredient', $this->token->getToken()->getUser());
                 },
                 'label' => "Listes des ingrédients",
                 'label_attr' => [
